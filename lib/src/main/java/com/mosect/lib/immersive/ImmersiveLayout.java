@@ -64,7 +64,7 @@ public class ImmersiveLayout {
     public static void darkNavigationBar(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             int sui = activity.getWindow().getDecorView().getSystemUiVisibility();
-            sui |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+            sui &= ~View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
             activity.getWindow().getDecorView().setSystemUiVisibility(sui);
         }
     }
