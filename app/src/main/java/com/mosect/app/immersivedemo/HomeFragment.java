@@ -1,5 +1,6 @@
 package com.mosect.app.immersivedemo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,9 @@ public class HomeFragment extends Fragment implements LayoutAdapter {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         titleView = view.findViewById(R.id.ly_title);
+        view.findViewById(R.id.btn_full).setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), FullActivity.class));
+        });
     }
 
     @Override

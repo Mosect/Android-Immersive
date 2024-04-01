@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#f1f2f3"
     android:orientation="vertical">
 
     <FrameLayout
@@ -16,22 +17,8 @@
             android:gravity="center_vertical"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
-            android:text="@string/title_home"
+            android:text="@string/title_full"
             android:textColor="#333333"
             android:textSize="17sp" />
     </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_full"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/button_full" />
-    </FrameLayout>
-
 </LinearLayout>

@@ -4,4 +4,6 @@
     <string name="tab_home">HOME</string>
     <string name="tab_find">FIND</string>
     <string name="title_home">HOME~</string>
+    <string name="title_full">FULL SCREEN</string>
+    <string name="button_full">Full Screen</string>
 </resources>

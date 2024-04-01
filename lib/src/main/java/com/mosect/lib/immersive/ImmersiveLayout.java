@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Insets;
 import android.graphics.Rect;
 import android.os.Build;
+import android.view.DisplayCutout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
@@ -88,11 +89,19 @@ public class ImmersiveLayout {
                 insetsRect.setEmpty();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                     // Android12+
-                    Insets systemBarInsets = insets.getInsets(WindowInsets.Type.systemBars());
-                    insetsRect.left = systemBarInsets.left;
-                    insetsRect.top = systemBarInsets.top;
-                    insetsRect.right = systemBarInsets.right;
-                    insetsRect.bottom = systemBarInsets.bottom;
+                    DisplayCutout displayCutout = insets.getDisplayCutout();
+                    if (null == displayCutout) {
+                        Insets systemBarInsets = insets.getInsets(WindowInsets.Type.systemBars());
+                        insetsRect.left = systemBarInsets.left;
+                        insetsRect.top = systemBarInsets.top;
+                        insetsRect.right = systemBarInsets.right;
+                        insetsRect.bottom = systemBarInsets.bottom;
+                    } else {
+                        insetsRect.left = displayCutout.getSafeInsetLeft();
+                        insetsRect.top = displayCutout.getSafeInsetTop();
+                        insetsRect.right = displayCutout.getSafeInsetRight();
+                        insetsRect.bottom = displayCutout.getSafeInsetBottom();
+                    }
                     dispatchInsetsChanged();
                     return WindowInsets.CONSUMED;
                 } else {
