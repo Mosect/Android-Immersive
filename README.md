@@ -17,7 +17,7 @@ allprojects {
 ## 在app模块加入依赖
 ```
 dependencies {
-  implementation 'com.github.Mosect:Android-Immersive:1.0.0'
+  implementation 'com.github.Mosect:Android-Immersive:1.0.3'
 }
 ```
 
