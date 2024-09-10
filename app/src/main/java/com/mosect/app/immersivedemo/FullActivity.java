@@ -14,27 +14,40 @@ import com.mosect.lib.immersive.LayoutAdapter;
 public class FullActivity extends AppCompatActivity implements LayoutAdapter {
 
     private View lyTitle;
+    private boolean fullScreen;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ImmersiveLayout.lightStatusBar(this);
+
         ImmersiveLayout immersiveLayout = new ImmersiveLayout(this);
         immersiveLayout.addAdapter(this);
         setContentView(R.layout.activity_full);
         lyTitle = findViewById(R.id.ly_title);
-        fullStyle();
+        findViewById(R.id.btn_toggleFull).setOnClickListener(v -> {
+            setFullScreen(!fullScreen);
+        });
+        setFullScreen(true);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        fullStyle();
+        ImmersiveLayout.lightStatusBar(this);
+        setFullScreen(fullScreen);
     }
 
-    private void fullStyle() {
+    private void setFullScreen(boolean fullScreen) {
+        this.fullScreen = fullScreen;
+
         View decorView = getWindow().getDecorView();
         int sui = decorView.getSystemUiVisibility();
-        sui |= View.SYSTEM_UI_FLAG_FULLSCREEN;
+        if (fullScreen) {
+            sui |= View.SYSTEM_UI_FLAG_FULLSCREEN;
+        } else {
+            sui &= ~View.SYSTEM_UI_FLAG_FULLSCREEN;
+        }
         decorView.setSystemUiVisibility(sui);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {

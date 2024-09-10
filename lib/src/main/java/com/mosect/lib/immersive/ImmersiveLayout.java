@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.Insets;
 import android.graphics.Rect;
 import android.os.Build;
-import android.view.DisplayCutout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
@@ -72,6 +71,7 @@ public class ImmersiveLayout {
 
     private final Rect insetsRect = new Rect();
     private final List<LayoutAdapter> adapters = new ArrayList<>();
+    private FullScreenInsets fullScreenInsets = null;
 
     public ImmersiveLayout(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -84,12 +84,14 @@ public class ImmersiveLayout {
             attrs.flags |= WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
             // 允许在状态栏区域绘制
             attrs.flags |= WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
-            activity.getWindow().getDecorView().setOnApplyWindowInsetsListener((v, insets) -> {
+            View decorView = activity.getWindow().getDecorView();
+            decorView.setOnApplyWindowInsetsListener((v, insets) -> {
                 // 监听insets
                 insetsRect.setEmpty();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                     // Android12+
-                    DisplayCutout displayCutout = insets.getDisplayCutout();
+                    // 以下代码无法适配全屏情况，需要对全屏情况做处理
+                    /*DisplayCutout displayCutout = insets.getDisplayCutout();
                     if (null == displayCutout) {
                         Insets systemBarInsets = insets.getInsets(WindowInsets.Type.systemBars());
                         insetsRect.left = systemBarInsets.left;
@@ -101,6 +103,23 @@ public class ImmersiveLayout {
                         insetsRect.top = displayCutout.getSafeInsetTop();
                         insetsRect.right = displayCutout.getSafeInsetRight();
                         insetsRect.bottom = displayCutout.getSafeInsetBottom();
+                    }*/
+
+                    // 获取屏幕安全显示区域，由系统栏和屏幕镂空部分确定
+                    Insets systemBarInsets = insets.getInsets(WindowInsets.Type.systemBars() | WindowInsets.Type.displayCutout());
+                    int sui = v.getSystemUiVisibility();
+                    boolean fullScreen = (sui & View.SYSTEM_UI_FLAG_FULLSCREEN) != 0;
+                    if (fullScreen) {
+                        // 全屏情况，系统只会汇报一次insets，其他情况，insets都会被提前消费，因此需要缓存insets
+                        if (null == fullScreenInsets) fullScreenInsets = new FullScreenInsets();
+                        fullScreenInsets.put(systemBarInsets.left, systemBarInsets.top, systemBarInsets.right, systemBarInsets.bottom);
+                        insetsRect.set(fullScreenInsets.rect);
+                    } else {
+                        // 非全屏情况就无需处理，直接获取系统即可
+                        insetsRect.left = systemBarInsets.left;
+                        insetsRect.top = systemBarInsets.top;
+                        insetsRect.right = systemBarInsets.right;
+                        insetsRect.bottom = systemBarInsets.bottom;
                     }
                     dispatchInsetsChanged();
                     return WindowInsets.CONSUMED;
@@ -196,6 +215,17 @@ public class ImmersiveLayout {
     protected void dispatchInsetsChanged() {
         for (LayoutAdapter adapter : adapters) {
             adapter.onAdjustLayoutPadding(this);
+        }
+    }
+
+    static class FullScreenInsets {
+        final Rect rect = new Rect();
+
+        void put(int left, int top, int right, int bottom) {
+            if (left > rect.left) rect.left = left;
+            if (top > rect.top) rect.top = top;
+            if (right > rect.right) rect.right = right;
+            if (bottom > rect.bottom) rect.bottom = bottom;
         }
     }
 }
