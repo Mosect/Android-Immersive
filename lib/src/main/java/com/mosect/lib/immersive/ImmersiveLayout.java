@@ -69,9 +69,15 @@ public class ImmersiveLayout {
         }
     }
 
+    private static FullScreenInsets fullScreenInsets;
+
+    private static FullScreenInsets getFullScreenInsets() {
+        if (null == fullScreenInsets) fullScreenInsets = new FullScreenInsets();
+        return fullScreenInsets;
+    }
+
     private final Rect insetsRect = new Rect();
     private final List<LayoutAdapter> adapters = new ArrayList<>();
-    private FullScreenInsets fullScreenInsets = null;
 
     public ImmersiveLayout(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -111,7 +117,7 @@ public class ImmersiveLayout {
                     boolean fullScreen = (sui & View.SYSTEM_UI_FLAG_FULLSCREEN) != 0;
                     if (fullScreen) {
                         // 全屏情况，系统只会汇报一次insets，其他情况，insets都会被提前消费，因此需要缓存insets
-                        if (null == fullScreenInsets) fullScreenInsets = new FullScreenInsets();
+                        FullScreenInsets fullScreenInsets = getFullScreenInsets();
                         fullScreenInsets.put(systemBarInsets.left, systemBarInsets.top, systemBarInsets.right, systemBarInsets.bottom);
                         insetsRect.set(fullScreenInsets.rect);
                     } else {
@@ -218,7 +224,7 @@ public class ImmersiveLayout {
         }
     }
 
-    static class FullScreenInsets {
+    private static class FullScreenInsets {
         final Rect rect = new Rect();
 
         void put(int left, int top, int right, int bottom) {

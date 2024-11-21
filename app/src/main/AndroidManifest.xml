@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".FullActivity" />
+        <activity android:name=".FullActivity2" />
     </application>
 
 </manifest>

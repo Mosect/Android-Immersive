@@ -37,6 +37,9 @@ public class HomeFragment extends Fragment implements LayoutAdapter {
         view.findViewById(R.id.btn_full).setOnClickListener(v -> {
             startActivity(new Intent(requireContext(), FullActivity.class));
         });
+        view.findViewById(R.id.btn_full2).setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), FullActivity2.class));
+        });
     }
 
     @Override

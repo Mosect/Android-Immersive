@@ -6,5 +6,7 @@
     <string name="title_home">HOME~</string>
     <string name="title_full">FULL SCREEN</string>
     <string name="button_full">Full Screen</string>
+    <string name="button_full2">Full Screen 2</string>
     <string name="button_toggleFull">Toggle Full Screen</string>
+    <string name="button_next">Next Activity</string>
 </resources>

@@ -28,14 +28,23 @@ public class FullActivity extends AppCompatActivity implements LayoutAdapter {
         findViewById(R.id.btn_toggleFull).setOnClickListener(v -> {
             setFullScreen(!fullScreen);
         });
+        findViewById(R.id.btn_next).setOnClickListener(v -> {
+            startActivity(getIntent());
+        });
+        applyDecorStyle();
+        ImmersiveLayout.lightStatusBar(this);
         setFullScreen(true);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        applyDecorStyle();
         ImmersiveLayout.lightStatusBar(this);
         setFullScreen(fullScreen);
+    }
+
+    public void applyDecorStyle() {
     }
 
     private void setFullScreen(boolean fullScreen) {
